@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Web3 To-Do List</title>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin: 0 auto;
+            width: 50%;
+        }
+        h1 {
+            text-align: center;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li:not(:last-child) {
+            margin-bottom: 10px;
+        }
+        label {
+            display: inline-block;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        input[type="text"] {
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        button {
+            padding: 5px 15px;
+            border-radius: 5px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #3E8E41;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Web3 To-Do List</h1>
+        <form>
+            <label for="task">New task:</label>
+            <input type="text" id="task" name="task" placeholder="Enter task">
+            <button type="button" onclick="addTask()">Add</button>
+        </form>
+        <ul id="task-list"></ul>
+    </div>
+    <script>
+        const contractAddress = "YOUR_SMART_CONTRACT_ADDRESS";
+        const abi = [
+            {
+                "inputs": [
+                    { "internalType": "string", "name": "_content", "type": "string" }
+                ],
+                "name": "addTask",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "getTasks",
+                "outputs": [
+                    {
+                        "components": [
+                            { "internalType": "string", "name": "content", "type": "string" },
+                            { "internalType": "bool", "name": "completed", "type": "bool" }
+                        ],
+                        "internalType": "struct ToDoList.Task[]",
+                        "name": "",
+                        "type": "tuple[]"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ];
+
+        let provider, signer, contract;
+
+        async function connectWallet() {
+            if (typeof window.ethereum !== "undefined") {
+                provider = new ethers.providers.Web3Provider(window.ethereum);
+                await provider.send("eth_requestAccounts", []);
+                signer = provider.getSigner();
+                contract = new ethers.Contract(contractAddress, abi, signer);
+                console.log("Connected to wallet");
+            } else {
+                alert("MetaMask is not installed");
+            }
+        }
+
+        async function addTask() {
+            const taskInput = document.getElementById("task");
+            const taskValue = taskInput.value;
+
+            if (!taskValue) {
+                alert("Please enter a task");
+                return;
+            }
+
+            try {
+                const tx = await contract.addTask(taskValue);
+                await tx.wait();
+                alert("Task added successfully");
+                taskInput.value = "";
+                loadTasks();
+            } catch (error) {
+                console.error(error);
+                alert("Failed to add task");
+            }
+        }
+
+        async function loadTasks() {
+            if (!contract) {
+                await connectWallet();
+            }
+
+            try {
+                const tasks = await contract.getTasks();
+                const taskList = document.getElementById("task-list");
+                taskList.innerHTML = "";
+
+                tasks.forEach((task, index) => {
+                    const li = document.createElement("li");
+                    li.textContent = `${index + 1}. ${task.content} - ${
+                        task.completed ? "Completed" : "Pending"
+                    }`;
+                    taskList.appendChild(li);
+                });
+            } catch (error) {
+                console.error(error);
+                alert("Failed to load tasks");
+            }
+        }
+
+        // Automatically load tasks on page load
+        window.onload = async () => {
+            await connectWallet();
+            loadTasks();
+        };
+    </script>
+</body>
+</html>
