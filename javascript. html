@@ -1,0 +1,47 @@
+// Import Web3 library
+const Web3 = require('web3');
+
+// Set up Web3 provider
+const web3 = new Web3(new Web3.providers.HttpProvider('(link unavailable)'));
+
+// Define contract ABI and address
+const contractABI = [...]; // Replace with your contract ABI
+const contractAddress = '0x...'; // Replace with your contract address
+
+// Create a contract instance
+const contract = new web3.eth.Contract(contractABI, contractAddress);
+
+// Define a function to vote on a proposal
+async function voteOnProposal(proposalId, vote) {
+  // Get the user's Ethereum account
+  const accounts = await web3.eth.getAccounts();
+  const userAccount = accounts[0];
+
+  // Call the contract's vote function
+  const tx = await contract.methods.vote(proposalId, vote).send({ from: userAccount });
+  console.log(tx);
+}
+
+// Define a function to create a new proposal
+async function createProposal(proposalName, proposalDescription) {
+  // Get the user's Ethereum account
+  const accounts = await web3.eth.getAccounts();
+  const userAccount = accounts[0];
+
+  // Call the contract's createProposal function
+  const tx = await contract.methods.createProposal(proposalName, proposalDescription).send({ from: userAccount });
+  console.log(tx);
+}
+
+// Call the functions to test them
+voteOnProposal(1, true);
+createProposal('My Proposal', 'This is a test proposal.');
+```
+
+This code assumes you have:
+
+1. Installed the Web3 library using npm or yarn.
+2. Replaced `YOUR_PROJECT_ID` with your actual Infura project ID.
+3. Replaced `contractABI` and `contractAddress` with your actual contract ABI and address.
+
+Note that this is just a basic example to get you started. You'll need to modify and expand this code to fit your specific use case.
