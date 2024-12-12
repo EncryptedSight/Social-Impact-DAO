@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Social Impact DAO</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+</head>
+<body>
+  <header>
+    <nav>
+      <h1>Social Impact DAO</h1>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#impact">Our Impact</a></li>
+        <li><a href="#join">Join Us</a></li>
+      </ul>
+      <button id="connectWallet">Connect Wallet</button>
+    </nav>
+  </header>
+
+  <section id="hero">
+    <h2>Empowering Communities Through Decentralized Governance</h2>
+    <p>Join the movement and be part of meaningful social change with blockchain technology.</p>
+    <button onclick="joinDAO()">Join the DAO</button>
+  </section>
+
+  <section id="about">
+    <h3>About Us</h3>
+    <p>Social Impact DAO is a decentralized autonomous organization dedicated to funding and executing social impact projects worldwide. Members vote on proposals and allocate resources transparently using blockchain.</p>
+  </section>
+
+  <section id="impact">
+    <h3>Our Impact</h3>
+    <div class="impact-grid">
+      <div class="impact-item">
+        <h4>Clean Water Projects</h4>
+        <p>Providing access to clean drinking water in underprivileged communities.</p>
+      </div>
+      <div class="impact-item">
+        <h4>Education for All</h4>
+        <p>Funding educational initiatives for children and adults in rural areas.</p>
+      </div>
+      <div class="impact-item">
+        <h4>Renewable Energy</h4>
+        <p>Investing in sustainable energy projects to combat climate change.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="join">
+    <h3>How to Join</h3>
+    <ol>
+      <li>Connect your Web3 wallet.</li>
+      <li>Buy or earn DAO tokens.</li>
+      <li>Participate in governance and vote on proposals.</li>
+    </ol>
+    <button onclick="joinDAO()">Get Started</button>
+  </section>
+
+  <footer>
+    <p>&copy; 2024 Social Impact DAO. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Connect Wallet Function
+    async function connectWallet() {
+      if (window.ethereum) {
+        try {
+          const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+          alert(`Connected: ${accounts[0]}`);
+        } catch (error) {
+          console.error("Wallet connection failed:", error);
+        }
+      } else {
+        alert('Please install a Web3 wallet like MetaMask to proceed.');
+      }
+    }
+
+    document.getElementById('connectWallet').addEventListener('click', connectWallet);
+
+    // Placeholder function for joining DAO
+    function joinDAO() {
+      alert("Redirecting to DAO membership process...");
+    }
+  </script>
+</body>
+</html>
